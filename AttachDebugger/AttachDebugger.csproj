@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- DebugType full is required for ILMerge -->
+    <DebugType>Full</DebugType>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <!-- WinExe so we don't pop a console window -->
+    <OutputType>WinExe</OutputType>
+    <PlatformTarget>x86</PlatformTarget>
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EnvDTE80" Version="8.0.0" PrivateAssets="all" />
+    <PackageReference Include="ILMerge" Version="3.0.29" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="ILMerge" AfterTargets="Build">
+    <MakeDir Directories="$(OutputPath)merge" />
+    <Exec Command="$(ILMergeConsolePath) /out:merge\$(AssemblyName).exe $(AssemblyName).exe EnvDTE.dll EnvDTE80.dll stdole.dll" WorkingDirectory="$(MSBuildThisFileDirectory)$(OutputPath)" />
+    <Message Text="ILMerge: $(AssemblyName) -> $(MSBuildThisFileDirectory)$(OutputPath)merge\$(AssemblyName).exe" Importance="high" />
+  </Target>
+
+</Project>
