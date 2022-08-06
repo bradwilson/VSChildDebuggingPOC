@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using EnvDTE80;
 using DTE = EnvDTE.DTE;
 
-static partial class VisualStudioUtil
+public static partial class VisualStudioUtil
 {
 	static DTE? GetDTE(Process process)
 	{
@@ -40,7 +40,10 @@ static partial class VisualStudioUtil
 		return null;
 	}
 
-	public static void AttachDebugger(Process parentProcess, Process childProcess, string engine)
+	public static void AttachDebugger(
+		Process parentProcess,
+		Process childProcess,
+		string engine)
 	{
 		var dte = GetDTEFromDebuggedProcess(parentProcess);
 		if (dte == null)

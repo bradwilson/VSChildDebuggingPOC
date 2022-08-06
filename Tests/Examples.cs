@@ -18,13 +18,14 @@ public class Examples
 {
 	public Examples()
 	{
-		Assert.True(Debugger.IsAttached, "This test requires an attached debugger");
+		if (!Debugger.IsAttached)
+			Assert.Fail("This test requires an attached debugger");
 	}
 
 	[Fact]
 	public void DotNetCore()
 	{
-		var childFolder = FindAppFolder("ChildProcess", "netcoreapp2.1");
+		var childFolder = FindAppFolder("ChildProcess", "netcoreapp3.1");
 		var psi = new ProcessStartInfo
 		{
 			FileName = "dotnet",
@@ -77,12 +78,8 @@ public class Examples
 	void AttachDebugger(Process child, string engine)
 	{
 		var me = Process.GetCurrentProcess();
-		var launcherFolder = FindAppFolder("AttachDebugger", "net472");
-		var launcherProgram = Path.Combine(launcherFolder, "merge", "AttachDebugger.exe");
-		var launcher = Process.Start(launcherProgram, $"{me.Id} {child.Id} {engine}");
-		launcher.WaitForExit();
 
-		Assert.Equal(0, launcher.ExitCode);
+		VisualStudioUtil.AttachDebugger(me, child, engine);
 	}
 
 	public string FindAppFolder(string appName, string targetFramework)
